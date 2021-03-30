@@ -1,0 +1,17 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`defaultOptions should match the expected set of options 1`] = `
+Object {
+  "colors": Array [
+    "#d92027",
+    "#ff9234",
+    "#ffcd3c",
+    "#35d0ba",
+  ],
+  "getGlobal": [Function],
+  "globalAccessKey": "$wave",
+  "setGlobal": [Function],
+  "stroke": 1,
+  "type": "bars",
+}
+`;

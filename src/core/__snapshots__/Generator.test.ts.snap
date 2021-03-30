@@ -1,0 +1,27 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Generator should define the appropriate generators 1`] = `
+Array [
+  "bars",
+  "bars blocks",
+  "big bars",
+  "cubes",
+  "dualbars",
+  "dualbars blocks",
+  "fireworks",
+  "flower",
+  "flower blocks",
+  "orbs",
+  "ring",
+  "rings",
+  "round wave",
+  "shockwave",
+  "shine",
+  "shine rings",
+  "star",
+  "static",
+  "stitches",
+  "wave",
+  "web",
+]
+`;

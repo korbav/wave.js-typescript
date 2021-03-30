@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <link href="./style.css" rel="stylesheet" type="text/css" />
+    <script src="../dist/bundle.js" type="text/javascript"></script>
+    <title>Wave.JS examples > fromElement</title>
+</head>
+<body>
+<h1>
+    Wave.js | fromElement Example (automatically deactivated after 10 seconds)
+</h1>
+<h2>
+    fromElement(
+        elementOrElementId: HTMLAudioElement | string,
+        canvasOrCanvasId: HTMLCanvasElement | string,
+        options?: IWaveOptions,
+        fromElementOptions?: IFromElementOptions
+    ): { deactivate: () => void }
+</h2>
+<audio controls id="audio-player">
+    <source src="test_song.mp3" type="audio/mp3">
+</audio>
+<div id="container" class="multi">
+    <div id="canvas-container">
+        <canvas data-generator-type="bars" id="visualizer-canvas"></canvas>
+        <canvas data-generator-type="cubes" id="visualizer-canvas2"></canvas>
+        <canvas data-generator-type="flower" id="visualizer-canvas3"></canvas>
+        <canvas data-generator-type="ring" id="visualizer-canvas4"></canvas>
+        <canvas data-generator-type="wave" id="visualizer-canvas5"></canvas>
+        <canvas data-generator-type="web" id="visualizer-canvas6"></canvas>
+        <canvas data-generator-type="stitches" id="visualizer-canvas7"></canvas>
+        <canvas data-generator-type="shine" id="visualizer-canvas8"></canvas>
+        <canvas data-generator-type="fireworks" id="visualizer-canvas9"></canvas>
+        <canvas data-generator-type="static" id="visualizer-canvas10"></canvas>
+    </div>
+</div>
+<script>
+  const canvasList = document.querySelectorAll("canvas");
+  Array.from(canvasList).forEach((currentCanvas) => {
+    currentCanvas.height = currentCanvas.offsetHeight;
+    currentCanvas.width = currentCanvas.offsetWidth;
+    const { deactivate } = WaveJS.fromElement("audio-player", currentCanvas.id, {
+      type: ['stitches', currentCanvas.getAttribute("data-generator-type")],
+      colors: ["#FF0000", "#FF00FF", "#FFFF00"],
+      stroke: 5,
+    });
+    setTimeout(() => deactivate(), 10 * 1000);
+  });
+</script>
+</body>
+</html>

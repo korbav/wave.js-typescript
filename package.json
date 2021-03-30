@@ -1,0 +1,88 @@
+{
+  "name": "wave.js-typescript",
+  "version": "2.0.0",
+  "description": "Audio visualizer library for typescript/javascript (20+ designs).",
+  "license": "MIT",
+  "author": "Austin Michaud",
+  "homepage": "https://foobar404.github.io/Wave.js/#/",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/foobar404/Wave.js.git"
+  },
+  "bugs": {
+    "url": "https://github.com/foobar404/Wave.js/issues"
+  },
+  "keywords": [
+    "audio",
+    "visualizer",
+    "wave",
+    "sound",
+    "music",
+    "canvas"
+  ],
+  "main": "dist/bundle.js",
+  "types": "dist/bundle.d.ts",
+  "directories": {
+    "examples": "examples"
+  },
+  "files": [
+    "dist/bundle.js"
+  ],
+  "scripts": {
+    "test": "jest",
+    "test-coverage": "jest --coverage",
+    "test-watch": "jest --watch",
+    "build": "webpack",
+    "build-watch": "npx watch \"npm run build\" ./src",
+    "build-run": "npm run build && npm run server",
+    "server": "npm run example-from-element",
+    "example-from-element": "npx http-server ./ -o ./examples/fromElement.html -c-1",
+    "example-from-file": "npx http-server ./ -o ./examples/fromFile.html -c-1",
+    "example-from-stream": "npx http-server ./ -o ./examples/fromStream.html -c-1",
+    "lint": "eslint ."
+  },
+  "dependencies": {
+    "lodash": "^4.17.21",
+    "standardized-audio-context": "^25.1.12"
+  },
+  "devDependencies": {
+    "@types/jest": "^26.0.22",
+    "@typescript-eslint/eslint-plugin": "^4.19.0",
+    "@typescript-eslint/parser": "^4.19.0",
+    "eslint": "^7.22.0",
+    "eslint-plugin-import-quotes": "^0.0.1",
+    "eslint-plugin-unused-imports": "^1.1.0",
+    "http-server": "^0.12.3",
+    "jest": "^26.6.3",
+    "jsdom": "^16.5.1",
+    "stream-mock": "^2.0.5",
+    "ts-jest": "^26.5.4",
+    "ts-loader": "^8.0.18",
+    "typescript": "^3.2.1",
+    "webpack": "^5.28.0",
+    "webpack-cli": "^4.5.0"
+  },
+  "jest": {
+    "modulePathIgnorePatterns": [
+      "<rootDir>\\package.json"
+    ],
+    "preset": "ts-jest",
+    "testEnvironment": "node",
+    "transform": {
+      "^.+\\.ts?$": "ts-jest"
+    },
+    "testMatch": [
+      "**/*.test.ts"
+    ],
+    "globals": {
+      "window": {}
+    },
+    "verbose": true,
+    "restoreMocks": true,
+    "clearMocks": true,
+    "resetMocks": true,
+    "setupFiles": [
+      "./__mocks__/client.ts"
+    ]
+  }
+}

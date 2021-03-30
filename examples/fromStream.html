@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <link href="./style.css" rel="stylesheet" type="text/css" />
+    <script src="../dist/bundle.js" type="text/javascript"></script>
+    <title>Wave.JS examples > fromStream</title>
+</head>
+<body>
+<h1>
+    Wave.js | fromStream Example (automatically deactivated after 10 seconds)
+</h1>
+<h2>
+    fromStream (
+    stream: MediaStream,
+    canvasId: string,
+    options?: IWaveOptions,
+    fromStreamOptions?: IFromStreamOptions
+    ): { deactivate: () => void }
+</h2>
+    <div id="container">
+        <canvas id="visualizer-canvas"></canvas>
+    </div>
+    <script>
+        const canvas = document.querySelector('#visualizer-canvas');
+        canvas.height = canvas.offsetHeight;
+        canvas.width = canvas.offsetWidth;
+
+        navigator.mediaDevices.getUserMedia({
+          audio: true,
+        }).then((stream) => {
+          const { deactivate } = WaveJS.fromStream(stream, "visualizer-canvas", { type: "bars" }, { connectDestination: false });
+          setTimeout(() => deactivate(), 10 * 1000);
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <link href="./style.css" rel="stylesheet" type="text/css" />
+    <script src="../dist/bundle.js" type="text/javascript"></script>
+    <title>Wave.JS examples > fromFile</title>
+</head>
+<body>
+    <h1>
+        Wave.js | fromFile Example (automatically deactivated after 10 seconds)
+    </h1>
+    <h2>
+        fromFile(file: string, options?: IWaveOptions, fromFileOptions?: IFromFileOptions): { deactivate: () => void }
+    </h2>
+    <h3>Click anywhere to start</h3>
+    <div id="container">
+        <canvas id="visualizer-canvas"></canvas>
+    </div>
+    <script>
+        const canvas = document.querySelector('#visualizer-canvas');
+        const ctx = canvas.getContext('2d');
+        const height = canvas.offsetHeight;
+        const width = canvas.offsetWidth;
+        canvas.height = height;
+        canvas.width = width;
+
+        document.onclick = () => {
+          if (window.clicked) return;
+          window.clicked = true;
+          const { deactivate } = WaveJS.fromFile("test_song.mp3", { type: "bars" }, {
+            width,
+            height,
+            format: 'png',
+            drawRate: 50,
+            callback: (strDataURI) => {
+              const img = new Image();
+              img.onload = function(){
+                ctx.clearRect(0, 0, width, height);
+                ctx.drawImage(img, 0, 0);
+              };
+              img.src = strDataURI;
+            }
+          });
+          setTimeout(() => deactivate(), 10 * 1000);
+        }
+    </script>
+</body>
+</html>
