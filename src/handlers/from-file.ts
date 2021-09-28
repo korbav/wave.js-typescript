@@ -1,9 +1,9 @@
-import { AudioContext } from 'standardized-audio-context';
 import IWaveOptions from '../core/types/IWaveOptions';
 import defaultOptions from '../utils/default-options';
 import visualize from '../core/Visualizer';
 import IFromFileOptions from '../core/types/IFromFileOptions';
 import { checkGenerator, clearCanvas } from '../utils';
+
 
 const createVirtualCanvas = (width, height) => {
   const canvas = document.createElement("canvas");

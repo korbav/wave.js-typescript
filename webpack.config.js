@@ -11,6 +11,7 @@ module.exports = {
         exclude: /.*(node_modules|\.test(\.d)?\.ts).*/,
       },
     ],
+
   },
   resolve: {
     extensions: [".ts", ".js"],

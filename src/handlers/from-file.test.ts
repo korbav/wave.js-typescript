@@ -4,22 +4,12 @@ import { checkGenerator } from '../utils';
 import visualize from '../core/Visualizer';
 import * as utils from '../utils/index';
 
-const closeMock = jest.fn().mockImplementation(() => null);
 jest.mock('../core/Visualizer');
 jest.mock('../../src/core/Processor');
 jest.mock('../utils');
-jest.mock('standardized-audio-context', () => ({
-  ['AudioContext']: () => ({
-    close: jest.fn().mockReturnValue({
-      then: closeMock
-    }),
-    connect: jest.fn(),
-    createAnalyser: jest.fn().mockReturnValue({
-      getByteFrequencyData: jest.fn().mockReturnValue(new Uint8Array())
-    }),
-    createMediaElementSource: jest.fn().mockReturnValue({connect: jest.fn()}),
-  }),
-}));
+
+const closeMock = jest.fn().mockImplementation(() => null);
+
 
 const originalGlobalAudio = global.Audio;
 const audioEventListenerMock = jest.fn().mockImplementation(() => null);
@@ -27,6 +17,17 @@ const audioPlayListenerMock = jest.fn();
 
 describe('from file', () => {
   beforeEach(() => {
+    global.AudioContext = jest.fn().mockImplementation(() => ({
+      close: jest.fn().mockReturnValue({
+        then: closeMock
+      }),
+      connect: jest.fn(),
+      createAnalyser: jest.fn().mockReturnValue({
+        getByteFrequencyData: jest.fn().mockReturnValue(new Uint8Array())
+      }),
+      createMediaElementSource: jest.fn().mockReturnValue({connect: jest.fn()}),
+    }as any));
+
     global.Audio = jest.fn().mockImplementation(() => ({
       addEventListener: audioEventListenerMock,
       play: audioPlayListenerMock,

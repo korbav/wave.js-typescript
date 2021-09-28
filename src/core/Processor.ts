@@ -1,10 +1,10 @@
-import { AudioContext } from 'standardized-audio-context';
 import { clearCanvas, setPropertyIfNotSet } from '../utils';
 import visualize from './Visualizer';
 import IWaveOptions from './types/IWaveOptions';
 import IFromElementOptions from './types/IFromElementOptions';
 import ElementNotFoundError from './errors/ElementNotFoundError';
 import CanvasNotFoundError from './errors/CanvasNotFoundError';
+
 
 export default class Processor {
   activated = false;
@@ -23,10 +23,25 @@ export default class Processor {
     private options: IWaveOptions,
     private fromElementOptions: IFromElementOptions,
   ) {
-    ['touchstart', 'touchmove', 'touchend', 'mouseup', 'click'].forEach((event: string) => {
+    this.unbindUserInteractEventsListeners(true);
+  }
+
+  bindUserInteractEventsListeners(bindPlayEvent = false): void {
+    ['touchend', 'mouseup', 'click'].forEach((event) => {
+      document.body.addEventListener(event, this.initialize.bind(this), {once: true})
+    });
+    if (bindPlayEvent) {
+      this.element.addEventListener('play', this.initialize.bind(this), {once: true});
+    }
+  }
+
+  unbindUserInteractEventsListeners(unbindPlayEvent = false): void {
+    ['touchend', 'mouseup', 'click'].forEach((event: string) => {
       document.body.removeEventListener(event, this.initialize);
     });
-    this.element.removeEventListener('play', this.initialize);
+    if (unbindPlayEvent) {
+      this.element.removeEventListener('play', this.initialize);
+    }
   }
 
   isActivated(): boolean {
@@ -40,19 +55,28 @@ export default class Processor {
   deactivate(): void {
     this.activated = false;
     clearCanvas(document.getElementById(this.canvasId) as HTMLCanvasElement);
+    // Test
+    this.unbindUserInteractEventsListeners();
+    const { getGlobal} = this.options;
+    const elementId = this.element.id;
+    const source = getGlobal(elementId, 'source');
+    const { connectDestination } = this.fromElementOptions;
+    if (source && connectDestination) {
+      source.disconnect(); // Prevents  "Connecting nodes after the context has been closed" in standardized-audio-context
+    }
     if (!this.fromElementOptions.existingMediaStreamSource && this.audioCtx) {
       this.audioCtx.close().then();
     }
   }
 
   initializeAfterUserGesture(): void {
-    ['touchstart', 'touchmove', 'touchend', 'mouseup', 'click'].forEach((event) => {
-      document.body.addEventListener(event, this.initialize.bind(this), {once: true})
-    });
-    this.element.addEventListener('play', this.initialize.bind(this), {once: true});
+    this.bindUserInteractEventsListeners(true);
   }
 
   initialize(): void {
+    if (this.activated) {
+      return; // Ignore if already activated
+    }
     this.activate();
     this.activeCanvas[this.canvasId] = JSON.stringify(this.options);
 
@@ -70,7 +94,7 @@ export default class Processor {
     this.currentCount = this.activeElements[elementId].count;
     let source = getGlobal(elementId, 'source');
 
-    if (!source || source.mediaElement !== this.element) {
+    if (!source || source.mediaElement !== this.element || this.audioCtx?.state === "closed") {
       const audioCtx = setGlobal(elementId, 'audioCtx', new AudioContext());
       this.audioCtx = audioCtx;
       source = this.fromElementOptions.existingMediaStreamSource || audioCtx.createMediaElementSource(this.element);

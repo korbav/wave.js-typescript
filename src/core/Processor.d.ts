@@ -1,4 +1,3 @@
-import { AudioContext } from 'standardized-audio-context';
 import IWaveOptions from './types/IWaveOptions';
 import IFromElementOptions from './types/IFromElementOptions';
 export default class Processor {
@@ -16,6 +15,8 @@ export default class Processor {
     bufferLength: number;
     audioCtx: AudioContext;
     constructor(element: HTMLAudioElement, canvasId: string, options: IWaveOptions, fromElementOptions: IFromElementOptions);
+    bindUserInteractEventsListeners(bindPlayEvent?: boolean): void;
+    unbindUserInteractEventsListeners(unbindPlayEvent?: boolean): void;
     isActivated(): boolean;
     activate(): void;
     deactivate(): void;

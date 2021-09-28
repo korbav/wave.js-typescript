@@ -1,4 +1,3 @@
-import { AudioContext } from 'standardized-audio-context';
 import IWaveOptions from '../core/types/IWaveOptions';
 import IFromStreamOptions from '../core/types/IFromStreamOptions';
 import defaultOptions from '../utils/default-options';
@@ -57,9 +56,10 @@ export default function fromStream(
   analyser.fftsize = 32768;
   const bufferLength = analyser.frequencyBinCount;
   currentStream.data = new Uint8Array(bufferLength);
-  this.frameCount = 1;
-  currentStream.loop = () => renderFrame(currentStream, analyser, sources, stream, ++this.frameCount);
-  renderFrame(currentStream, analyser, sources, stream, 1);
+
+  let frameCount = 1;
+  currentStream.loop = () => renderFrame(currentStream, analyser, sources, stream, ++frameCount);
+  renderFrame(currentStream, analyser, sources, stream, frameCount);
 
   return {
     deactivate: () => {

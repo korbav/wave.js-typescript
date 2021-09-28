@@ -4,29 +4,29 @@ import * as utils from '../utils';
 import fromStream from './from-stream';
 import visualize from '../core/Visualizer';
 
+jest.mock('../core/Visualizer');
+
+
+const closeMock = jest.fn().mockImplementation(() => null);
 const streamSourceConnectMock = jest.fn();
 const audioCtxDestinationMock = jest.fn();
 const analyzerMock = {
   getByteFrequencyData: jest.fn().mockReturnValue(new Uint8Array())
 };
 
-const closeMock = jest.fn().mockImplementation(() => null);
-jest.mock('../core/Visualizer');
-jest.mock('standardized-audio-context', () => ({
-  ['AudioContext']: () => ({
-    close: jest.fn().mockReturnValue({
-      then: closeMock
-    }),
-    connect: jest.fn(),
-    createAnalyser: jest.fn().mockImplementation(() => analyzerMock),
-    createMediaElementSource: jest.fn().mockReturnValue({connect: jest.fn()}),
-    createMediaStreamSource: jest.fn().mockReturnValue({connect: streamSourceConnectMock}),
-    destination: audioCtxDestinationMock,
-  }),
-}));
-
 describe('from stream', () => {
   beforeEach(() => {
+    global.AudioContext = jest.fn().mockImplementation(() => ({
+      close: jest.fn().mockReturnValue({
+        then: closeMock
+      }),
+      connect: jest.fn(),
+      createAnalyser: jest.fn().mockImplementation(() => analyzerMock),
+      createMediaElementSource: jest.fn().mockReturnValue({connect: jest.fn()}),
+      createMediaStreamSource: jest.fn().mockReturnValue({connect: streamSourceConnectMock}),
+      destination: audioCtxDestinationMock,
+    } as any));
+
     jest.spyOn(global, 'requestAnimationFrame').mockImplementationOnce((callback: any) => {
       callback();
       return 123;

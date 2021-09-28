@@ -22,10 +22,18 @@ const mockConnectOscillator = jest.fn();
 const mockStartOscillator = jest.fn();
 const mockStopOscillator = jest.fn();
 const mockAudioCtxDestination = {};
-
 const closeAudioContextMock = jest.fn().mockImplementation(() => null);
-jest.mock('standardized-audio-context', () => ({
-  AudioContext: () => {
+
+const createProcessor = (options = {existingMediaStreamSource: null}) => new Processor((audioElement as any), 'mock-canvas', {
+  getGlobal: jest.fn(),
+  setGlobal: jest.fn((elt, key, value) => value),
+}, {
+  existingMediaStreamSource: options.existingMediaStreamSource,
+});
+
+
+describe('Processor', () => {
+  beforeEach(() => {
     const context = {
       close: jest.fn().mockReturnValue({
         then: closeAudioContextMock
@@ -46,19 +54,12 @@ jest.mock('standardized-audio-context', () => ({
       connect: jest.fn(),
       context
     });
-    return context;
-  }
-}));
-
-const createProcessor = (options = {existingMediaStreamSource: null}) => new Processor((audioElement as any), 'mock-canvas', {
-  getGlobal: jest.fn(),
-  setGlobal: jest.fn((elt, key, value) => value),
-}, {
-  existingMediaStreamSource: options.existingMediaStreamSource,
-});
+    global.AudioContext = jest.fn().mockImplementation(() => {
+      return context;
+    });
+  })
 
 
-describe('Processor', () => {
   const mockAudioElement = {
     addEventListener: jest.fn(),
     removeEventListener: jest.fn(),
@@ -84,8 +85,6 @@ describe('Processor', () => {
       ['play', processor.initialize],
     ]);
     expect((document.body.removeEventListener as jest.Mock).mock.calls).toEqual([
-      ['touchstart', processor.initialize],
-      ['touchmove', processor.initialize],
       ['touchend', processor.initialize],
       ['mouseup', processor.initialize],
       ['click', processor.initialize],
@@ -154,24 +153,21 @@ describe('Processor', () => {
 
       processor.initializeAfterUserGesture();
 
-      expect((processor.initialize.bind as jest.Mock).mock.calls.filter(v => v.includes(processor)).length).toEqual(6);
-      expect(processor.initialize.bind).toHaveBeenCalledTimes(6);
-      expect(document.body.addEventListener).toHaveBeenCalledTimes(5);
+      expect((processor.initialize.bind as jest.Mock).mock.calls.filter(v => v.includes(processor)).length).toEqual(4);
+      expect(processor.initialize.bind).toHaveBeenCalledTimes(4);
+      expect(document.body.addEventListener).toHaveBeenCalledTimes(3);
       expect((document.body.addEventListener as jest.Mock).mock.calls).toEqual([
-        ['touchstart', mockBind, {once: true}],
-        ['touchmove',  mockBind, {once: true}],
-        ['touchend',   mockBind, {once: true}],
-        ['mouseup',    mockBind, {once: true}],
-        ['click',      mockBind, {once: true}],
+        ['touchend', mockBind, {once: true}],
+        ['mouseup', mockBind, {once: true}],
+        ['click', mockBind, {once: true}],
       ]);
-      expect(document.body.addEventListener).toHaveBeenCalledTimes(5);
       expect(audioElement.addEventListener).toHaveBeenCalledTimes(1);
       expect(audioElement.addEventListener).toHaveBeenCalledWith('play', mockBind, {once: true});
     });
 
     describe('renderFrame', () => {
       it('should trigger an ElementNotFoundError if the canvas element is not found', () => {
-        const processor = Object.assign(createProcessor(), { activeCanvas: { ['mock-canvas']: '{}'}});
+        const processor = Object.assign(createProcessor(), {activeCanvas: {['mock-canvas']: '{}'}});
         processor.activate();
 
         jest.spyOn(document, 'getElementById').mockImplementationOnce(() => undefined);
@@ -194,16 +190,15 @@ describe('Processor', () => {
             createOscillator: jest.fn().mockReturnValue({
               connect: mockOscillatorConnect,
               start: () => null,
-              stop:  () => null,
+              stop: () => null,
               frequency: {},
             }),
             destination: {},
           }
         };
-        const processor = createProcessor({ existingMediaStreamSource: mockSource });
+        const processor = createProcessor({existingMediaStreamSource: mockSource});
         jest.spyOn(processor, 'renderFrame').mockImplementation();
         jest.spyOn(processor, 'connectSource');
-        processor.activate();
         processor.initialize();
 
 
@@ -223,7 +218,6 @@ describe('Processor', () => {
     jest.spyOn(document, 'getElementById').mockImplementation((id) => mockElements[id]);
     jest.spyOn(utils, 'clearCanvas').mockImplementationOnce(() => null);
     const processor = createProcessor();
-    processor.activate();
     processor.initialize();
     processor.deactivate();
 
@@ -243,15 +237,14 @@ describe('Processor', () => {
         createOscillator: () => ({
           connect: () => null,
           start: () => null,
-          stop:  () => null,
+          stop: () => null,
           frequency: {},
         }),
         destination: {},
       }
     };
     jest.spyOn(document, 'getElementById').mockImplementation((id) => mockElements[id]);
-    const processor = createProcessor({ existingMediaStreamSource:  mockSource });
-    processor.activate();
+    const processor = createProcessor({existingMediaStreamSource: mockSource});
     processor.initialize();
     processor.deactivate();
 
