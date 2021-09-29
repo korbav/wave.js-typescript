@@ -144,15 +144,15 @@ describe('from file', () => {
           type: 'bars',
           stroke: 1,
           colors: ['red', 'green', 'blue'],
-          getSharedAudioContext: expect.any(Function),
-          setSharedAudioContext: expect.any(Function),
+          getAudioContext: expect.any(Function),
+          setAudioContext: expect.any(Function),
         }, 1],
         [expect.any(Uint8Array), fakeCanvas, {
           type: 'bars',
           stroke: 1,
           colors: ['red', 'green', 'blue'],
-          getSharedAudioContext: expect.any(Function),
-          setSharedAudioContext: expect.any(Function),
+          getAudioContext: expect.any(Function),
+          setAudioContext: expect.any(Function),
         }, 2],
       ]
     );

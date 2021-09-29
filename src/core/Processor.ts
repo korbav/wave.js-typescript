@@ -63,7 +63,7 @@ export default class Processor {
     this.unbindUserInteractEventsListeners();
     const elementId = this.element.id;
     const source: MediaElementAudioSourceNode = WaveJSStorage.get(`${elementId}-source`);
-    const { connectDestination } = this.fromElementOptions;
+    const {connectDestination} = this.fromElementOptions;
     if (source && connectDestination) {
       source.disconnect(); // Prevents  "Connecting nodes after the context has been closed" in standardized-audio-context
     }
@@ -93,12 +93,19 @@ export default class Processor {
       this.activeElements[elementId].count = 1;
     }
 
-    const {setSharedAudioContext} = this.options;
+    const {setAudioContext, getAudioContext} = this.options;
     this.currentCount = this.activeElements[elementId].count;
     let source: MediaElementAudioSourceNode = WaveJSStorage.get(`${elementId}-source`);
 
     if (!source || source.mediaElement !== this.element || this.audioCtx?.state === "closed") {
-      this.audioCtx = setSharedAudioContext(elementId, new AudioContext());
+      const existingContext = getAudioContext(elementId);
+      if (existingContext) {
+        this.audioCtx = existingContext;
+      } else {
+        const audioContext = new AudioContext();
+        setAudioContext(elementId, audioContext);
+        this.audioCtx = audioContext;
+      }
       source = this.fromElementOptions.existingMediaStreamSource || this.audioCtx.createMediaElementSource(this.element);
     }
 

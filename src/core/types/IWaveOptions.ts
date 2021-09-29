@@ -1,9 +1,9 @@
 import Generator from '../Generator';
 
 export default interface IWaveOptions {
-  type?: Generator | Array<Generator>,
   colors?: Array<string>,
   stroke?: number,
-  getSharedAudioContext?: (elementId: string) => AudioContext,
-  setSharedAudioContext?: (elementId: string, ctx: AudioContext) => AudioContext,
+  type?: Generator | Array<Generator>,
+  getAudioContext?: (elementId: string) => AudioContext, // To pick an external existing public shared context
+  setAudioContext?: (elementId: string, ctx: AudioContext) => AudioContext, // To set an external public shared context
 }

@@ -8,8 +8,8 @@ Object {
     "#ffcd3c",
     "#35d0ba",
   ],
-  "getSharedAudioContext": [Function],
-  "setSharedAudioContext": [Function],
+  "getAudioContext": [Function],
+  "setAudioContext": [Function],
   "stroke": 1,
   "type": "bars",
 }

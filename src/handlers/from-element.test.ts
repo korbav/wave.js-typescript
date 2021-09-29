@@ -45,8 +45,8 @@ describe('from element', () => {
     expect(Processor).toHaveBeenCalledTimes(1);
     expect(Processor).toHaveBeenCalledWith(audioElement, 'canvas-id', {
       colors: ["#d92027", "#ff9234", "#ffcd3c", "#35d0ba"],
-      getSharedAudioContext: expect.any(Function),
-      setSharedAudioContext: expect.any(Function),
+      getAudioContext: expect.any(Function),
+      setAudioContext: expect.any(Function),
       stroke: 1,
       type: 'bars',
     }, {

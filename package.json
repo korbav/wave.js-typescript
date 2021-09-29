@@ -40,7 +40,7 @@
     "example-from-file": "npx http-server ./ -o ./examples/fromFile.html -c-1",
     "example-from-stream": "npx http-server ./ -o ./examples/fromStream.html -c-1",
     "lint": "eslint .",
-    "prerelease": "npm run build"
+    "prepare": "npm run build"
   },
   "dependencies": {
     "audio-context-polyfill": "^1.0.0",
@@ -85,5 +85,8 @@
     "setupFiles": [
       "./__mocks__/client.ts"
     ]
+  },
+  "optionalDependencies": {
+    "fsevents": "^2.3.2"
   }
 }
