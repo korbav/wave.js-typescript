@@ -1,25 +1,16 @@
 import IWaveOptions from '../core/types/IWaveOptions';
-import { initGlobalObject, setPropertyIfNotSet } from './index';
 import Generator from '../core/Generator';
+import WaveJSStorage from './WaveJSStorage';
 
 const defaultOptions: IWaveOptions = {
   stroke: 1,
   colors: ["#d92027", "#ff9234", "#ffcd3c", "#35d0ba"],
   type: Generator.BARS,
-  globalAccessKey: '$wave',
-  getGlobal: <T>(elementId: string, accessKey: string) => {
-    const { globalAccessKey } = defaultOptions;
-    initGlobalObject(elementId, globalAccessKey);
-    return window[globalAccessKey][elementId][accessKey] as T;
+  getSharedAudioContext: (elementId: string): AudioContext => {
+    return WaveJSStorage.get(`${elementId}-audioCtx`);
   },
-  setGlobal: <T>(elementId: string, accessKey: string, value: T) => {
-    const globalAccessKey = defaultOptions.globalAccessKey;
-    let returnValue: T = defaultOptions.getGlobal(elementId, accessKey);
-    if (!returnValue) {
-      setPropertyIfNotSet<any>(window[globalAccessKey][elementId], accessKey, value);
-      returnValue = window[globalAccessKey][elementId][accessKey];
-    }
-    return returnValue as T;
+  setSharedAudioContext: (elementId: string, ctx: AudioContext): AudioContext => {
+    return WaveJSStorage.put(`${elementId}-audioCtx`, ctx);
   },
 };
 

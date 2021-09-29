@@ -58,8 +58,8 @@ describe('from stream', () => {
     fromStream(stream as unknown as MediaStream, 'canvas-id', {type: Generator.BARS});
     fromStream(stream as unknown as MediaStream, 'canvas-id', {type: Generator.BARS});
 
-    expect(cancelAnimationFrame).toHaveBeenCalledTimes(1);
-    expect(cancelAnimationFrame).toHaveBeenCalledWith(123);
+    expect(global.cancelAnimationFrame).toHaveBeenCalledTimes(1);
+    expect(global.cancelAnimationFrame).toHaveBeenCalledWith(123);
   });
 
   it('should loop call visualize depending on requestAnimationFrame handler', () => {

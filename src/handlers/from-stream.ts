@@ -2,7 +2,8 @@ import IWaveOptions from '../core/types/IWaveOptions';
 import IFromStreamOptions from '../core/types/IFromStreamOptions';
 import defaultOptions from '../utils/default-options';
 import visualize from '../core/Visualizer';
-import { checkGenerator, clearCanvas, initGlobalObject } from '../utils';
+import { checkGenerator, clearCanvas } from '../utils';
+import WaveJSStorage from '../utils/WaveJSStorage';
 
 const renderFrame = (currentStream, analyser, sources, stream, frameCount) => {
   if (currentStream.activated) {
@@ -32,9 +33,10 @@ export default function fromStream(
 
   const {connectDestination} = parsedFromStreamOptions;
   const currentStream = {canvasId, options: parsedOptions, data: null, loop: null, animation: null, activated: true};
-  const sources = initGlobalObject<typeof Object>('stream-sources', parsedOptions.globalAccessKey);
+  const sources = WaveJSStorage.putIfUndefined('stream-sources', {});
 
   let audioCtx: AudioContext, analyser: AnalyserNode, source: MediaStreamAudioSourceNode;
+
   if (!sources[stream.id]) {
     audioCtx = new AudioContext();
     analyser = audioCtx.createAnalyser();

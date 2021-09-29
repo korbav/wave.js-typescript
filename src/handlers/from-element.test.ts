@@ -45,9 +45,8 @@ describe('from element', () => {
     expect(Processor).toHaveBeenCalledTimes(1);
     expect(Processor).toHaveBeenCalledWith(audioElement, 'canvas-id', {
       colors: ["#d92027", "#ff9234", "#ffcd3c", "#35d0ba"],
-      getGlobal: expect.any(Function),
-      globalAccessKey: '$wave',
-      setGlobal: expect.any(Function),
+      getSharedAudioContext: expect.any(Function),
+      setSharedAudioContext: expect.any(Function),
       stroke: 1,
       type: 'bars',
     }, {

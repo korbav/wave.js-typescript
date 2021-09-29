@@ -1,6 +1,6 @@
 {
   "name": "wave.js-typescript",
-  "version": "2.0.0",
+  "version": "0.0.1",
   "description": "Audio visualizer library for typescript/javascript (20+ designs).",
   "license": "MIT",
   "author": "Austin Michaud",
@@ -20,13 +20,13 @@
     "music",
     "canvas"
   ],
-  "main": "dist/bundle.js",
-  "types": "dist/bundle.d.ts",
+  "main": "dist/Wave.js-typescript.min.js",
+  "types": "dist/Wave.js-typescript.min.d.ts",
   "directories": {
     "examples": "examples"
   },
   "files": [
-    "dist/bundle.js"
+    "dist/Wave.js-typescript.min.js"
   ],
   "scripts": {
     "test": "jest",
@@ -39,7 +39,8 @@
     "example-from-element": "npx http-server ./ -o ./examples/fromElement.html -c-1",
     "example-from-file": "npx http-server ./ -o ./examples/fromFile.html -c-1",
     "example-from-stream": "npx http-server ./ -o ./examples/fromStream.html -c-1",
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "prerelease": "npm run build"
   },
   "dependencies": {
     "audio-context-polyfill": "^1.0.0",

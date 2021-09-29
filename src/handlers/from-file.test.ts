@@ -144,17 +144,15 @@ describe('from file', () => {
           type: 'bars',
           stroke: 1,
           colors: ['red', 'green', 'blue'],
-          getGlobal: expect.any(Function),
-          setGlobal: expect.any(Function),
-          globalAccessKey: '$wave',
+          getSharedAudioContext: expect.any(Function),
+          setSharedAudioContext: expect.any(Function),
         }, 1],
         [expect.any(Uint8Array), fakeCanvas, {
           type: 'bars',
           stroke: 1,
           colors: ['red', 'green', 'blue'],
-          getGlobal: expect.any(Function),
-          setGlobal: expect.any(Function),
-          globalAccessKey: '$wave',
+          getSharedAudioContext: expect.any(Function),
+          setSharedAudioContext: expect.any(Function),
         }, 2],
       ]
     );

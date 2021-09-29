@@ -1,16 +1,9 @@
 import * as has from 'lodash/has';
-import * as get from 'lodash/get';
 import * as set from 'lodash/set';
 import Generator from '../core/Generator';
 import InvalidGeneratorError from '../core/errors/InvalidGeneratorError';
 import IActiveElement from '../core/types/IActiveElement';
 import IFrameRateMap from '../core/types/IFrameRateMap';
-
-export const initGlobalObject = <T>(elementId: string, accessKey: string): T => {
-  const propertyPath = `${accessKey}.${elementId}`;
-  setPropertyIfNotSet<T>((window as any), propertyPath, {} as T);
-  return get(window, propertyPath);
-};
 
 export const setPropertyIfNotSet = <T>(object: IActiveElement | IFrameRateMap | typeof Object, property: string, value: T): void => {
   if (!has(object, property)) {
@@ -31,3 +24,4 @@ export const clearCanvas = (canvas: HTMLCanvasElement): void => {
     canvas.getContext('2d').clearRect(0, 0, canvas.width, canvas.height);
   }
 }
+

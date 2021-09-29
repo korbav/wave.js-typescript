@@ -8,9 +8,8 @@ Object {
     "#ffcd3c",
     "#35d0ba",
   ],
-  "getGlobal": [Function],
-  "globalAccessKey": "$wave",
-  "setGlobal": [Function],
+  "getSharedAudioContext": [Function],
+  "setSharedAudioContext": [Function],
   "stroke": 1,
   "type": "bars",
 }

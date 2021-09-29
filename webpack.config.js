@@ -18,7 +18,7 @@ module.exports = {
   },
   output: {
     path: path.resolve(__dirname, "dist"),
-    filename: "bundle.js",
+    filename: "Wave.js-typescript.min.js",
     library: 'WaveJS',
     libraryExport: 'default',
     libraryTarget: 'umd',

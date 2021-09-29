@@ -1,4 +1,4 @@
-import { checkGenerator, initGlobalObject, setPropertyIfNotSet, clearCanvas } from './index';
+import { checkGenerator, setPropertyIfNotSet, clearCanvas } from './index';
 import InvalidGeneratorError from '../core/errors/InvalidGeneratorError';
 
 describe('utils', () => {
@@ -17,28 +17,6 @@ describe('utils', () => {
       setPropertyIfNotSet<any>(someObject, 'some-property', 456);
 
       expect(someObject['some-property']).toEqual(123);
-    });
-  });
-
-  describe('initGlobalObject', () => {
-    it('should create the store if not already created', () => {
-      initGlobalObject<typeof Object>('anyId', 'accessKey');
-      expect(window['accessKey']).toBeDefined();
-    });
-
-    it('should initialize an object within the window', () => {
-      initGlobalObject<typeof Object>('elementId', 'accessKey');
-      expect(window['accessKey']['elementId']).toEqual({});
-    });
-
-    it('should not change the value when the object is already set', () => {
-      window['anotherAccessKey'] = {
-        anotherElementId: 123,
-      };
-
-      initGlobalObject<typeof Object>('anotherElementId', 'anotherAccessKey');
-
-      expect(window['anotherAccessKey']['anotherElementId']).toEqual(123);
     });
   });
 

@@ -7,6 +7,7 @@ import CanvasNotFoundError from './errors/CanvasNotFoundError';
 import IActiveCanvas from './types/IActiveCanvas';
 import IActiveElement from './types/IActiveElement';
 import IActiveElementObject from './types/IActiveElementObject';
+import WaveJSStorage from '../utils/WaveJSStorage';
 
 
 export default class Processor {
@@ -60,9 +61,8 @@ export default class Processor {
     clearCanvas(document.getElementById(this.canvasId) as HTMLCanvasElement);
     // Test
     this.unbindUserInteractEventsListeners();
-    const { getGlobal } = this.options;
     const elementId = this.element.id;
-    const source: MediaElementAudioSourceNode = getGlobal(elementId, 'source');
+    const source: MediaElementAudioSourceNode = WaveJSStorage.get(`${elementId}-source`);
     const { connectDestination } = this.fromElementOptions;
     if (source && connectDestination) {
       source.disconnect(); // Prevents  "Connecting nodes after the context has been closed" in standardized-audio-context
@@ -93,18 +93,17 @@ export default class Processor {
       this.activeElements[elementId].count = 1;
     }
 
-    const {setGlobal, getGlobal} = this.options;
+    const {setSharedAudioContext} = this.options;
     this.currentCount = this.activeElements[elementId].count;
-    let source: MediaElementAudioSourceNode = getGlobal(elementId, 'source');
+    let source: MediaElementAudioSourceNode = WaveJSStorage.get(`${elementId}-source`);
 
     if (!source || source.mediaElement !== this.element || this.audioCtx?.state === "closed") {
-      const audioCtx = setGlobal(elementId, 'audioCtx', new AudioContext());
-      this.audioCtx = audioCtx;
-      source = this.fromElementOptions.existingMediaStreamSource || audioCtx.createMediaElementSource(this.element);
+      this.audioCtx = setSharedAudioContext(elementId, new AudioContext());
+      source = this.fromElementOptions.existingMediaStreamSource || this.audioCtx.createMediaElementSource(this.element);
     }
 
-    this.analyser = setGlobal(elementId, 'analyser', source.context.createAnalyser());
-    setGlobal(elementId, 'source', source);
+    this.analyser = WaveJSStorage.put<AnalyserNode>(`${elementId}-analyser`, source.context.createAnalyser());
+    WaveJSStorage.put<MediaElementAudioSourceNode>(`${elementId}-source`, source);
 
     //beep test for ios
     const oscillator = source.context.createOscillator();

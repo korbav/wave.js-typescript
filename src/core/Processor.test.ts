@@ -25,8 +25,8 @@ const mockAudioCtxDestination = {};
 const closeAudioContextMock = jest.fn().mockImplementation(() => null);
 
 const createProcessor = (options = {existingMediaStreamSource: null}) => new Processor((audioElement as any), 'mock-canvas', {
-  getGlobal: jest.fn(),
-  setGlobal: jest.fn((elt, key, value) => value),
+  getSharedAudioContext: jest.fn(),
+  setSharedAudioContext: jest.fn((elt, value) => value),
 }, {
   existingMediaStreamSource: options.existingMediaStreamSource,
 });
