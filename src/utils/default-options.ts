@@ -7,19 +7,19 @@ const defaultOptions: IWaveOptions = {
   colors: ["#d92027", "#ff9234", "#ffcd3c", "#35d0ba"],
   type: Generator.BARS,
   globalAccessKey: '$wave',
-  getGlobal: (elementId: string, accessKey: string) => {
+  getGlobal: <T>(elementId: string, accessKey: string) => {
     const { globalAccessKey } = defaultOptions;
     initGlobalObject(elementId, globalAccessKey);
-    return window[globalAccessKey][elementId][accessKey];
+    return window[globalAccessKey][elementId][accessKey] as T;
   },
-  setGlobal: (elementId: string, accessKey: string, value: any) => {
+  setGlobal: <T>(elementId: string, accessKey: string, value: T) => {
     const globalAccessKey = defaultOptions.globalAccessKey;
-    let returnValue = defaultOptions.getGlobal(elementId, accessKey);
+    let returnValue: T = defaultOptions.getGlobal(elementId, accessKey);
     if (!returnValue) {
       setPropertyIfNotSet<any>(window[globalAccessKey][elementId], accessKey, value);
       returnValue = window[globalAccessKey][elementId][accessKey];
     }
-    return returnValue;
+    return returnValue as T;
   },
 };
 

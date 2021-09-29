@@ -1,4 +1,5 @@
 import IFunctionContext from '../core/types/IFunctionContext';
+import IPoint from '../core/types/IPoint';
 
 export default (functionContext: IFunctionContext): void => {
   const { data, options: { colors }, ctx, h, w } = functionContext;
@@ -9,8 +10,8 @@ export default (functionContext: IFunctionContext): void => {
   const point_count = 120;
   const percent = (r - offset - 35) / (255);
   const increase = (360 / point_count) * Math.PI / 180;
-  const top = [];
-  const bottom = [];
+  const top: Array<IPoint> = [];
+  const bottom: Array<IPoint> = [];
 
   for (let point = 1; point <= point_count; point++) {
     const p = ((data[200 % point])) * percent;
@@ -32,16 +33,14 @@ export default (functionContext: IFunctionContext): void => {
   }
 
   ctx.moveTo(top[0].x, top[0].y)
-  for (let t in top) {
-    t = top[t];
-    ctx.lineTo((t as any).x, (t as any).y);
+  for (const t in top) {
+    ctx.lineTo(top[t].x, top[t].y);
   }
   ctx.closePath();
   ctx.moveTo(bottom[0].x, bottom[0].y);
 
   for (let b = bottom.length - 1; b >= 0; b--) {
-    b = bottom[b];
-    ctx.lineTo((b as any).x, (b as any).y);
+    ctx.lineTo(bottom[b].x, bottom[b].y);
   }
   ctx.closePath();
 
@@ -54,9 +53,8 @@ export default (functionContext: IFunctionContext): void => {
   //inner color
   ctx.beginPath();
   ctx.moveTo(bottom[0].x, bottom[0].y)
-  for (let b in bottom) {
-    b = bottom[b];
-    ctx.lineTo((b as any).x, (b as any).y);
+  for (const b in bottom) {
+    ctx.lineTo(bottom[b].x, bottom[b].y);
   }
   ctx.closePath();
 

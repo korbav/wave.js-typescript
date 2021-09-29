@@ -5,6 +5,7 @@ import { setPropertyIfNotSet } from '../utils';
 import * as graphUtils from '../graph-utils'
 import defaultOptions from '../utils/default-options';
 import CanvasNotFoundError from './errors/CanvasNotFoundError';
+import IFrameRateMap from './types/IFrameRateMap';
 
 const typeMap = {
   [Generator.BARS]: graphUtils.drawBars,
@@ -30,7 +31,7 @@ const typeMap = {
   [Generator.WEB]: graphUtils.drawWeb,
 };
 
-const frameRateMap: any = {};
+const frameRateMap: IFrameRateMap = {};
 
 export default function visualize(data: Uint8Array, canvasEltOrId: string | HTMLCanvasElement, originalOptions: IWaveOptions, frame?: number): void {
   const options: IWaveOptions = {...defaultOptions, ...(originalOptions || {})}

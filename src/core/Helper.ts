@@ -1,4 +1,6 @@
 import IVisualizerOptions from './types/IVisualizerOptions';
+import IFrequenciesSpectrum from './types/IFrequenciesSpectrum';
+import IStartEndPoints from './types/IStartEndPoints';
 
 const toRadians = (degree) => {
   return (degree * Math.PI) / 180;
@@ -47,7 +49,7 @@ export default class Helper {
     this.ctx = ctx;
   }
 
-  mutateData(data: Array<number>, type: string, extra = null): any {
+  mutateData(data: Array<any> | Uint8Array, type: string, extra = null): Array<any> | Uint8Array | IFrequenciesSpectrum {
     if (type === "mirror") {
       let rtn = [];
 
@@ -100,15 +102,15 @@ export default class Helper {
     if (type === "scale") {
       let scalePercent = extra / 255;
       if (extra <= 3 && extra >= 0) scalePercent = extra;
-      return data.map(value => value * scalePercent);
+      return data.map(value => value * scalePercent) as Array<number>;
     }
 
     if (type === "organize") {
       return {
         base: data.slice(60, 120),
+        mids: data.slice(255, 2000),
         vocals: data.slice(120, 255),
-        mids: data.slice(255, 2000)
-      };
+      } as IFrequenciesSpectrum;
     }
 
     if (type === "reverb") {
@@ -144,7 +146,7 @@ export default class Helper {
     pointCount: number,
     endPoints: Array<number>,
     options?: IVisualizerOptions,
-  ): { start: Array<Array<number>>, end: Array<Array<number>> } {
+  ): IStartEndPoints {
     const {offset, rotate, customOrigin} = {
       offset: 0,
       rotate: 0,
@@ -168,13 +170,13 @@ export default class Helper {
 
         let x = originX + (radius - pointOffset) * Math.cos(currentRadian)
         let y = originY + (radius - pointOffset) * Math.sin(currentRadian)
-        const point1 = rotatePoint([x, y], [originX, originY], rotate)
+        const point1: Array<number> = rotatePoint([x, y], [originX, originY], rotate);
 
         rtn.start.push(point1)
 
         x = originX + ((radius - pointOffset) + currentEndPoint) * Math.cos(currentRadian)
         y = originY + ((radius - pointOffset) + currentEndPoint) * Math.sin(currentRadian)
-        const point2 = rotatePoint([x, y], [originX, originY], rotate)
+        const point2:  Array<number> = rotatePoint([x, y], [originX, originY], rotate)
 
         rtn.end.push(point2)
       }
@@ -192,11 +194,11 @@ export default class Helper {
         const degree = rotate
         const pointOffset = endPoints[i] * (offset / 100)
 
-        const startingPoint = rotatePoint([originX + (i * increment), originY - pointOffset],
+        const startingPoint: Array<number> = rotatePoint([originX + (i * increment), originY - pointOffset],
           [originX, originY], degree)
         rtn.start.push(startingPoint)
 
-        const endingPoint = rotatePoint([originX + (i * increment), (originY + endPoints[i]) - pointOffset],
+        const endingPoint: Array<number> = rotatePoint([originX + (i * increment), (originY + endPoints[i]) - pointOffset],
           [originX, originY], degree)
         rtn.end.push(endingPoint)
       }
@@ -251,20 +253,20 @@ export default class Helper {
 
     this.ctx.beginPath();
     this.ctx.moveTo(x + radius, y);
-    const p1 = rotatePoint([x + width, y], [x, y], rotate)
-    const p2 = rotatePoint([x + width, y + height], [x, y], rotate)
+    const p1: Array<number> = rotatePoint([x + width, y], [x, y], rotate)
+    const p2: Array<number> = rotatePoint([x + width, y + height], [x, y], rotate)
     this.ctx.arcTo(p1[0], p1[1], p2[0], p2[1], radius);
 
-    const p3 = rotatePoint([x + width, y + height], [x, y], rotate)
-    const p4 = rotatePoint([x, y + height], [x, y], rotate)
+    const p3: Array<number> = rotatePoint([x + width, y + height], [x, y], rotate)
+    const p4: Array<number> = rotatePoint([x, y + height], [x, y], rotate)
     this.ctx.arcTo(p3[0], p3[1], p4[0], p4[1], radius);
 
-    const p5 = rotatePoint([x, y + height], [x, y], rotate)
-    const p6 = rotatePoint([x, y], [x, y], rotate)
+    const p5: Array<number> = rotatePoint([x, y + height], [x, y], rotate)
+    const p6: Array<number> = rotatePoint([x, y], [x, y], rotate)
     this.ctx.arcTo(p5[0], p5[1], p6[0], p6[1], radius);
 
-    const p7 = rotatePoint([x, y], [x, y], rotate)
-    const p8 = rotatePoint([x + width, y], [x, y], rotate)
+    const p7: Array<number> = rotatePoint([x, y], [x, y], rotate)
+    const p8: Array<number> = rotatePoint([x + width, y], [x, y], rotate)
     this.ctx.arcTo(p7[0], p7[1], p8[0], p8[1], radius);
     this.ctx.closePath();
 

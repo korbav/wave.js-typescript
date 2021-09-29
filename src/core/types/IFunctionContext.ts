@@ -1,7 +1,7 @@
 import IWaveOptions from './IWaveOptions';
 
 export default interface IFunctionContext {
-  data: any,
+  data: Uint8Array,
   options: IWaveOptions,
   ctx: CanvasRenderingContext2D,
   h: number,

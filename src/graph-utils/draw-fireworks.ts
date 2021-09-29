@@ -2,14 +2,13 @@ import IFunctionContext from '../core/types/IFunctionContext';
 import Helper from '../core/Helper';
 
 export default (functionContext: IFunctionContext): void => {
-  const { options, ctx, h, w } = functionContext;
+  const { options, ctx, h, w, data: originalData } = functionContext;
   const { colors } = options;
   const helper = new Helper(ctx);
-  let { data } = functionContext;
 
-  data = helper.mutateData(data, "shrink", 200).slice(0, 120);
-  data = helper.mutateData(data, "mirror");
-  data = helper.mutateData(data, "scale", (h / 4) + ((h / 4) * .35));
+  let data: Array<number> = (helper.mutateData(originalData, "shrink", 200) as Array<number>).slice(0, 120);
+  data = helper.mutateData(data, "mirror") as Array<number>;
+  data = helper.mutateData(data, "scale", (h / 4) + ((h / 4) * .35)) as Array<number>;
 
   const points = helper.getPoints("circle", h / 2, [w / 2, h / 2], data.length, data, { offset: 35, rotate: 270 });
 

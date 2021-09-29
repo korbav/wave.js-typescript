@@ -2,14 +2,13 @@ import IFunctionContext from '../core/types/IFunctionContext';
 import Helper from '../core/Helper';
 
 export default (functionContext: IFunctionContext): void => {
-  const { options, ctx, h, w } = functionContext;
-  let { data } = functionContext;
+  const { options, ctx, h, w, data: originalData } = functionContext;
   const { colors } = options;
   const helper = new Helper(ctx);
 
-  data = helper.mutateData(data, "shrink", 300);
-  data = helper.mutateData(data, "scale", h / 2);
-  data = helper.mutateData(data, "split", 4).slice(0, 3);
+  let data: Array<number> | Array<Array<number>> = helper.mutateData(originalData, "shrink", 300) as Array<number>;
+  data = helper.mutateData(data as Array<number>, "scale", h / 2) as Array<number>;
+  data = (helper.mutateData(data, "split", 4) as Array<Array<number>>).slice(0, 3);
 
   let colorIndex = 0;
   data.forEach((points) => {

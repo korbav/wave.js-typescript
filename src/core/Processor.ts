@@ -4,13 +4,16 @@ import IWaveOptions from './types/IWaveOptions';
 import IFromElementOptions from './types/IFromElementOptions';
 import ElementNotFoundError from './errors/ElementNotFoundError';
 import CanvasNotFoundError from './errors/CanvasNotFoundError';
+import IActiveCanvas from './types/IActiveCanvas';
+import IActiveElement from './types/IActiveElement';
+import IActiveElementObject from './types/IActiveElementObject';
 
 
 export default class Processor {
   activated = false;
-  analyser: any = null;
-  activeCanvas: any = {};
-  activeElements: any = {};
+  analyser: AnalyserNode = null;
+  activeCanvas: IActiveCanvas = {};
+  activeElements: IActiveElement = {};
   frameCount = 1;
   currentCount = 0;
   data: Uint8Array = null;
@@ -57,9 +60,9 @@ export default class Processor {
     clearCanvas(document.getElementById(this.canvasId) as HTMLCanvasElement);
     // Test
     this.unbindUserInteractEventsListeners();
-    const { getGlobal} = this.options;
+    const { getGlobal } = this.options;
     const elementId = this.element.id;
-    const source = getGlobal(elementId, 'source');
+    const source: MediaElementAudioSourceNode = getGlobal(elementId, 'source');
     const { connectDestination } = this.fromElementOptions;
     if (source && connectDestination) {
       source.disconnect(); // Prevents  "Connecting nodes after the context has been closed" in standardized-audio-context
@@ -82,7 +85,7 @@ export default class Processor {
 
     //track elements used so multiple elements use the same data
     const elementId = this.element.id;
-    setPropertyIfNotSet<any>(this.activeElements, elementId, {});
+    setPropertyIfNotSet<IActiveElementObject>(this.activeElements, elementId, {});
     this.activeElements[elementId] = this.activeElements[elementId] || {}
     if (this.activeElements[elementId].count) {
       this.activeElements[elementId].count += 1
@@ -92,7 +95,7 @@ export default class Processor {
 
     const {setGlobal, getGlobal} = this.options;
     this.currentCount = this.activeElements[elementId].count;
-    let source = getGlobal(elementId, 'source');
+    let source: MediaElementAudioSourceNode = getGlobal(elementId, 'source');
 
     if (!source || source.mediaElement !== this.element || this.audioCtx?.state === "closed") {
       const audioCtx = setGlobal(elementId, 'audioCtx', new AudioContext());
@@ -115,7 +118,7 @@ export default class Processor {
     }
     this.connectSource(source, this.analyser);
 
-    this.analyser.fftsize = 32768;
+    this.analyser.fftSize = 32768;
     this.bufferLength = this.analyser.frequencyBinCount;
     this.data = new Uint8Array(this.bufferLength);
 
@@ -155,7 +158,7 @@ export default class Processor {
     visualize(this.activeElements[elementId].data, this.canvasId, this.options, this.frameCount);
   }
 
-  connectSource(source: MediaElementAudioSourceNode, destination: AnalyserNode): void {
+  connectSource(source: MediaElementAudioSourceNode, destination: AudioNode): void {
     source.connect(destination);
   }
 }

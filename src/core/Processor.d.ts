@@ -1,14 +1,16 @@
 import IWaveOptions from './types/IWaveOptions';
 import IFromElementOptions from './types/IFromElementOptions';
+import IActiveCanvas from './types/IActiveCanvas';
+import IActiveElement from './types/IActiveElement';
 export default class Processor {
     private element;
     private canvasId;
     private options;
     private fromElementOptions;
     activated: boolean;
-    analyser: any;
-    activeCanvas: any;
-    activeElements: any;
+    analyser: AnalyserNode;
+    activeCanvas: IActiveCanvas;
+    activeElements: IActiveElement;
     frameCount: number;
     currentCount: number;
     data: Uint8Array;
@@ -23,5 +25,5 @@ export default class Processor {
     initializeAfterUserGesture(): void;
     initialize(): void;
     renderFrame(): void;
-    connectSource(source: MediaElementAudioSourceNode, destination: AnalyserNode): void;
+    connectSource(source: MediaElementAudioSourceNode, destination: AudioNode): void;
 }

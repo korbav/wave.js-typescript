@@ -8,7 +8,7 @@ const renderFrame = (currentStream, analyser, sources, stream, frameCount) => {
   if (currentStream.activated) {
     analyser.getByteFrequencyData(currentStream.data);
     visualize(currentStream.data, currentStream.canvasId, currentStream.options, frameCount);
-    sources[stream.toString()].animation = requestAnimationFrame(currentStream.loop);
+    sources[stream.id].animation = requestAnimationFrame(currentStream.loop);
   }
 }
 
@@ -32,10 +32,10 @@ export default function fromStream(
 
   const {connectDestination} = parsedFromStreamOptions;
   const currentStream = {canvasId, options: parsedOptions, data: null, loop: null, animation: null, activated: true};
-  const sources = initGlobalObject('stream-sources', parsedOptions.globalAccessKey);
+  const sources = initGlobalObject<typeof Object>('stream-sources', parsedOptions.globalAccessKey);
 
-  let audioCtx, analyser, source;
-  if (!sources[stream.toString()]) {
+  let audioCtx: AudioContext, analyser: AnalyserNode, source: MediaStreamAudioSourceNode;
+  if (!sources[stream.id]) {
     audioCtx = new AudioContext();
     analyser = audioCtx.createAnalyser();
     source = audioCtx.createMediaStreamSource(stream);
@@ -43,17 +43,17 @@ export default function fromStream(
     if (connectDestination) {
       source.connect(audioCtx.destination); //playback audio
     }
-    sources[stream.toString()] = {
+    sources[stream.id] = {
       audioCtx,
       analyser,
       source
     }
   } else {
-    cancelAnimationFrame(sources[stream.toString()].animation);
-    analyser = sources[stream.toString()].analyser;
+    cancelAnimationFrame(sources[stream.id].animation);
+    analyser = sources[stream.id].analyser;
   }
 
-  analyser.fftsize = 32768;
+  analyser.fftSize = 32768;
   const bufferLength = analyser.frequencyBinCount;
   currentStream.data = new Uint8Array(bufferLength);
 

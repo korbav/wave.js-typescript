@@ -43,7 +43,7 @@ describe('from stream', () => {
   it('should check the type of the generator', () => {
     jest.spyOn(utils, 'checkGenerator').mockReturnValueOnce();
     const stream = new ObjectReadableMock([], {});
-    stream.toString = () => 'fake-stream1';
+    stream['id'] = 'fake-stream1';
 
     fromStream(stream as unknown as MediaStream, 'canvas-id', {type: Generator.BARS});
 
@@ -53,7 +53,7 @@ describe('from stream', () => {
 
   it('should cancel the current animation if fromStream has been already called for the given stream', () => {
     const stream = new ObjectReadableMock([], {});
-    stream.toString = () => 'fake-stream2';
+    stream['id'] = 'fake-stream2';
 
     fromStream(stream as unknown as MediaStream, 'canvas-id', {type: Generator.BARS});
     fromStream(stream as unknown as MediaStream, 'canvas-id', {type: Generator.BARS});
@@ -66,7 +66,7 @@ describe('from stream', () => {
     jest.useFakeTimers();
     jest.spyOn(global, 'requestAnimationFrame').mockImplementation(() => null);
     const stream = new ObjectReadableMock([], {});
-    stream.toString = () => 'fake-stream3';
+    stream['id'] = 'fake-stream3';
 
     fromStream(stream as unknown as MediaStream, 'canvas-id', {type: Generator.BARS});
     jest.runAllTimers();
@@ -85,7 +85,7 @@ describe('from stream', () => {
 
   it('should connect to the destination by default', () => {
     const stream = new ObjectReadableMock([], {});
-    stream.toString = () => 'fake-stream4';
+    stream['id'] = 'fake-stream4';
 
     fromStream(stream as unknown as MediaStream, 'canvas-id', {type: Generator.BARS});
 
@@ -98,7 +98,7 @@ describe('from stream', () => {
 
   it('should not connect to the destination if the connectDestination option is set to false', () => {
     const stream = new ObjectReadableMock([], {});
-    stream.toString = () => 'fake-stream5';
+    stream['id'] = 'fake-stream5';
 
     fromStream(stream as unknown as MediaStream, 'canvas-id', {type: Generator.BARS}, {
       connectDestination: false,
@@ -124,7 +124,7 @@ describe('from stream', () => {
       return 789;
     });
     const stream = new ObjectReadableMock([], {});
-    stream.toString = () => 'fake-stream6';
+    stream['id'] = 'fake-stream6';
     const {deactivate} = fromStream(stream as unknown as MediaStream, 'canvas-id', {type: Generator.BARS});
 
     jest.advanceTimersToNextTimer();

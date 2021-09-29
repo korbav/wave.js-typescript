@@ -1,17 +1,17 @@
 import IFunctionContext from '../core/types/IFunctionContext';
 import Helper from '../core/Helper';
+import IFrequenciesSpectrum from '../core/types/IFrequenciesSpectrum';
 
 export default (functionContext: IFunctionContext): void => {
-  const { options, ctx, h, w } = functionContext;
-  let { data } = functionContext;
+  const { options, ctx, h, w, data: originalData } = functionContext;
 
   const { colors } = options;
   const helper = new Helper(ctx);
 
-  data = helper.mutateData(data, "organize").vocals;
-  data = helper.mutateData(data, "shrink", 10);
-  data = helper.mutateData(data, "scale", h);
-  data = helper.mutateData(data, "amp", 1);
+  let data: Uint8Array|Array<number> = (helper.mutateData(originalData, "organize") as IFrequenciesSpectrum).vocals;
+  data = helper.mutateData(data, "shrink", 10) as Array<number>;
+  data = helper.mutateData(data, "scale", h) as Array<number>;
+  data = helper.mutateData(data, "amp", 1) as Array<number>;
   const points = helper.getPoints("line", w, [0, h / 2], data.length, data, { offset: 50 });
 
   let colorIndex = 0;

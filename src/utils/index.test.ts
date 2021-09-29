@@ -22,12 +22,12 @@ describe('utils', () => {
 
   describe('initGlobalObject', () => {
     it('should create the store if not already created', () => {
-      initGlobalObject('anyId', 'accessKey');
+      initGlobalObject<typeof Object>('anyId', 'accessKey');
       expect(window['accessKey']).toBeDefined();
     });
 
     it('should initialize an object within the window', () => {
-      initGlobalObject('elementId', 'accessKey');
+      initGlobalObject<typeof Object>('elementId', 'accessKey');
       expect(window['accessKey']['elementId']).toEqual({});
     });
 
@@ -36,7 +36,7 @@ describe('utils', () => {
         anotherElementId: 123,
       };
 
-      initGlobalObject('anotherElementId', 'anotherAccessKey');
+      initGlobalObject<typeof Object>('anotherElementId', 'anotherAccessKey');
 
       expect(window['anotherAccessKey']['anotherElementId']).toEqual(123);
     });
