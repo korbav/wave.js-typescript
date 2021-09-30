@@ -5,7 +5,7 @@ on:
 
 jobs:
   build:
-    name: CI
+    name: CI lint, test
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
